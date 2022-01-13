@@ -1,0 +1,6 @@
+requests
+loguru
+pycryptodome
+opencv-python
+fire
+flask
