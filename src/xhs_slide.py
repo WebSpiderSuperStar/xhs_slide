@@ -58,7 +58,7 @@ def encrypt(key, text):
     return base64.b64encode(ciphertext)
 
 
-class ShuMei():
+class ShuMei:
     '''
     响应体riskLevel为pass即验证成功
     '''
