@@ -5,6 +5,8 @@
 # @Author       : Payne
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
+import random
+
 import cv2
 import requests
 from Crypto.Cipher import DES
@@ -35,7 +37,7 @@ def scrape(req_method, req_uri, req_header, req_params, req_dat) -> requests.Res
         logger.error(f"An error occurred while crawling, status code: {resp.status_code}, req_uri: {req_uri}")
     except requests.RequestException as e:
         logger.error(
-            f"A request exception occurred while crawling, status code: {resp.status_code}, req_uri: {req_uri}"
+            f"A request exception occurred while crawling, Requests Exception: {e}"
         )
 
 
@@ -59,9 +61,9 @@ def encrypt(key, text):
 
 
 class ShuMei:
-    '''
+    """
     响应体riskLevel为pass即验证成功
-    '''
+    """
 
     def __init__(self, deviceId):
         self.deviceId = deviceId
@@ -185,9 +187,11 @@ class ShuMei:
             )
             if 'PASS' in res.text:
                 return self.rid
-            if err_num > 10:
+            elif err_num > 10:
                 print("err_num > 10")
                 break
+            else:
+                time.sleep(random.uniform(1, 3))
 
 
 def rids(device=""):

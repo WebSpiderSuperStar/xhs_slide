@@ -19,7 +19,7 @@ def hello_world():
     return '<h2 align="center"> Welcome</h2>'
 
 
-@app.route('/sm_captcha', methods=['POST'])
+@app.route('/sm_captcha', methods=['GET', 'POST'])
 def sm_captcha():
     results = {
         "authorization": request.form.get('authorization'),
@@ -29,4 +29,4 @@ def sm_captcha():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host="0.0.0.0", port=1212)
+    app.run(debug=True, host="0.0.0.0", port=1212)
