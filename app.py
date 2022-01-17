@@ -6,7 +6,6 @@
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
 import json
-import os
 
 from src.bypass import applet_bypass
 

@@ -5,17 +5,42 @@
 # @Author       : Payne
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
-
-
 import cv2
 import requests
 from Crypto.Cipher import DES
 import re, json, time, base64
+from loguru import logger
+
+
+def scrape(req_method, req_uri, req_header, req_params, req_dat) -> requests.Response:
+    """请求方法
+   :param req_method:
+   :param req_uri:
+   :param req_header:
+   :param req_params:
+   :param req_dat:
+   :return: requests.Response
+   """
+    try:
+        logger.info(f"scraping url: {req_uri}")
+        resp = requests.request(
+            method=str(req_method).upper(),
+            url=req_uri,
+            headers=req_header,
+            params=req_params,
+            data=req_dat
+        )
+        if resp.status_code == 200:
+            return resp
+        logger.error(f"An error occurred while crawling, status code: {resp.status_code}, req_uri: {req_uri}")
+    except requests.RequestException as e:
+        logger.error(
+            f"A request exception occurred while crawling, status code: {resp.status_code}, req_uri: {req_uri}"
+        )
 
 
 def encrypt(key, text):
-    """
-    DES 加密
+    """DES 加密
     :param key: 密钥, 长度必须为 16(AES-128)、24(AES-192)、32(AES-256) Bytes 长度
     :param text: 密文
     :return:
@@ -76,15 +101,21 @@ class ShuMei():
             'callback': f"sm_{self.timestamp}",
             'organization': self.organization,
         }
-        res = requests.get(url=self.register_url,
-                           headers=self.header, params=data)
+        # res = requests.get(url=self.register_url,
+        #                    headers=self.header, params=data)
+        res = scrape(
+            req_method='get',
+            req_uri=self.register_url,
+            req_header=self.header,
+            req_params=data,
+            req_dat={}
+        )
         register_data = re.search("sm_\d+\((.*?)\)", res.text).group(1)
-        register_data = json.loads(register_data)
-        return register_data['detail']
+        return json.loads(register_data)['detail']
 
     def save_img(self, img_urls):
         for i in range(2):
-            res = requests.get(self.img_url + img_urls[i])
+            res = scrape('get', self.img_url + img_urls[i], {}, {}, {})
             with open(self.img_paths[i], 'wb', ) as f_wb:
                 f_wb.write(res.content)
 
@@ -98,8 +129,7 @@ class ShuMei():
         target_rgb = cv2.imread(target)
         target_gray = cv2.cvtColor(target_rgb, cv2.COLOR_BGR2GRAY)
         template_rgb = cv2.imread(template, 0)
-        res = cv2.matchTemplate(
-            target_gray, template_rgb, cv2.TM_CCOEFF_NORMED)
+        res = cv2.matchTemplate(target_gray, template_rgb, cv2.TM_CCOEFF_NORMED)
         value = cv2.minMaxLoc(res)
         distance = value[3][0] + 7
         return int(distance / 2)
@@ -110,10 +140,11 @@ class ShuMei():
         :return:  js_url  protocolc数值
         """
         url = f"https://captcha.fengkongcloud.com/ca/v1/conf?lang=zh-cn&organization={self.organization}&channel=GooglePlay&appId=default&callback=sm_{str(int(time.time()) * 1000)}&rversion=1.0.1&sdkver=1.1.3&model=slide"
-        res = requests.get(url).text
-        js_ver = re.search('-(\d+)/captcha-sdk', res).group(1)
+        # res = requests.get(url).text
+        res = scrape(req_method='get', req_uri=url, req_header={}, req_dat={}, req_params={})
+        js_ver = re.search('-(\d+)/captcha-sdk', res.text).group(1)
         js_url = "https://castatic.fengkongcloud.com" + \
-                 re.search('"js":"(.*?)"}', res).group(1)
+                 re.search('"js":"(.*?)"}', res.text).group(1)
         return js_url, js_ver
 
     def generate_params(self):
@@ -145,8 +176,14 @@ class ShuMei():
         while 1:
             err_num += 1
             params = self.generate_params()
-            res = requests.get(self.fverify_url, headers=self.header, params=params).text
-            if 'PASS' in res:
+            res = scrape(
+                req_method='get',
+                req_uri=self.fverify_url,
+                req_header=self.header,
+                req_params=params,
+                req_dat={}
+            )
+            if 'PASS' in res.text:
                 return self.rid
             if err_num > 10:
                 print("err_num > 10")
