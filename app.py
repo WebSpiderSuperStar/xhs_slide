@@ -5,13 +5,13 @@
 # @Author       : Payne
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
-import json
-
-from src.bypass import applet_bypass
-
+from src.bypass import rids
 from flask import Flask, request
+from execjs import compile
 
 app = Flask(__name__)
+
+file = open("src/device.js").read()
 
 
 @app.route('/')
@@ -21,11 +21,11 @@ def hello_world():
 
 @app.route('/sm_captcha', methods=['GET', 'POST'])
 def sm_captcha():
-    results = {
+    return {
         "authorization": request.form.get('authorization'),
-        "verify": applet_bypass(authorization=request.form.get('authorization')),
+        "rid": rids(),
+        "deviceId": compile(file).call('main'),
     }
-    return json.dumps(results, ensure_ascii=False)
 
 
 if __name__ == '__main__':

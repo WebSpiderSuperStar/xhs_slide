@@ -14,12 +14,11 @@ from loguru import logger
 from fire import Fire
 from execjs import compile
 
-js_res = open('src/device.js', encoding='utf8').read()
+js_res = open("./src/device.js", encoding='utf8').read()
 
 
 def applet_bypass(
         authorization: AnyStr = "wxmp.8857a74d-14dc-4ed6-b157-3c8fb7df16de",
-
 ) -> None:
     url = "https://www.xiaohongshu.com/fe_api/burdock/weixin/v2/shield/captchaV2"
     logger.info(f"\t\n\tauthorizations: {authorization}\t\n \t")
