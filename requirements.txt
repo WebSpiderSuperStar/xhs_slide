@@ -4,3 +4,4 @@ pycryptodome
 opencv-python
 fire
 flask
+pyexecjs

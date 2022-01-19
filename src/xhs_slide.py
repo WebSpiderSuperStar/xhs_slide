@@ -5,8 +5,6 @@
 # @Author       : Payne
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
-import random
-
 import cv2
 import requests
 from Crypto.Cipher import DES
@@ -190,8 +188,6 @@ class ShuMei:
             elif err_num > 10:
                 print("err_num > 10")
                 break
-            else:
-                time.sleep(random.uniform(1, 3))
 
 
 def rids(device=""):
