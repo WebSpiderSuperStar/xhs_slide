@@ -7,9 +7,7 @@
 # @Desc:
 
 import json
-
 import fire
-
 from src.bypass import applet_bypass
 
 
@@ -21,5 +19,5 @@ def sm_captcha(authorization):
     return json.dumps(results, ensure_ascii=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     fire.Fire(sm_captcha)
