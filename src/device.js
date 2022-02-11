@@ -108,7 +108,6 @@ let deviceId = (e = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, func
 
 
 function T(t, e) {
-
     try {
         // TODO
         // var n = b().timestamp;

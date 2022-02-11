@@ -99,14 +99,12 @@ class ShuMei:
             "model": "slide",
             "lang": "zh-cn",
             "data": '{"os":"android","sdkver":"1.2.4","deviceId":"'
-            + self.deviceId
-            + '"}',
+                    + self.deviceId
+                    + '"}',
             "appId": "default",
             "callback": f"sm_{self.timestamp}",
             "organization": self.organization,
         }
-        # res = requests.get(url=self.register_url,
-        #                    headers=self.header, params=data)
         res = scrape(
             req_method="get",
             req_uri=self.register_url,
@@ -121,8 +119,8 @@ class ShuMei:
         for i in range(2):
             res = scrape("get", self.img_url + img_urls[i], {}, {}, {})
             with open(
-                self.img_paths[i],
-                "wb",
+                    self.img_paths[i],
+                    "wb",
             ) as f_wb:
                 f_wb.write(res.content)
 
@@ -201,8 +199,8 @@ class ShuMei:
 
 
 def rids(device=""):
-    shumei = ShuMei(deviceId=device)
-    rid = shumei.passed()
+    shu_mei = ShuMei(deviceId=device)
+    rid = shu_mei.passed()
     return rid
 
 

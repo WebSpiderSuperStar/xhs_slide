@@ -16,7 +16,7 @@ file = open("src/device.js").read()
 
 @app.route("/")
 def hello_world():
-    return '<h2 align="center"> Welcome</h2>'
+    return '<h2 align="center">Welcome</h2>'
 
 
 @app.route("/sm_captcha", methods=["GET", "POST"])
@@ -29,4 +29,4 @@ def sm_captcha():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=1212)
+    app.run(host="0.0.0.0", port=1212)
