@@ -5,10 +5,13 @@
 # @Author       : Payne
 # @Email        : wuzhipeng1289690157@gmail.com
 # @Desc:
+import re
+import json
+import time
+import base64
 import cv2
 import requests
 from Crypto.Cipher import DES
-import re, json, time, base64
 from loguru import logger
 
 
@@ -41,7 +44,7 @@ def scrape(req_method, req_uri, req_header, req_params, req_dat) -> requests.Res
         )
 
 
-def encrypt(key, text):
+def DES_encrypt(key, text):
     """DES 加密
     :param key: 密钥, 长度必须为 16(AES-128)、24(AES-192)、32(AES-256) Bytes 长度
     :param text: 密文
@@ -57,7 +60,7 @@ def encrypt(key, text):
         add = length - (count % length)
         text = text + ("\0" * add)
     ciphertext = encrypter.encrypt(text.encode())
-    return base64.b64encode(ciphertext)
+    return base64.b64encode(ciphertext).decode()
 
 
 class ShuMei:
@@ -167,7 +170,8 @@ class ShuMei:
         rversion = "1.0.1"
         distance = self.img_distance()
         params = {
-            "dl": encrypt("2575232a", str(distance / 310)).decode("utf-8"),
+            # "dl": encrypt("2575232a", str(distance / 310)),
+            "tq": DES_encrypt("c78a7666", str(distance / 310)),
             "rid": self.rid,
             "organization": organization,
             "ostype": ostype,

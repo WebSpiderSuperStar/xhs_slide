@@ -13,12 +13,25 @@ import json
 from loguru import logger
 from fire import Fire
 from execjs import compile
+from os.path import dirname, abspath, join
 
-js_res = open("./src/device.js", encoding="utf8").read()
+
+js_path = join(dirname(__file__), 'device.js')
+
+js_res = open(js_path, encoding="utf8").read()
+
+# for i in range(10):
+#     print(compile(js_res).call("main"))
 
 
 def applet_bypass(
-    authorization: AnyStr = "wxmp.8857a74d-14dc-4ed6-b157-3c8fb7df16de",
+        authorization: AnyStr = random.choice([
+            "wxmp.25a1d7d4-5ced-4b1a-b037-a99be272c99c",
+            "wxmp.8857a74d-14dc-4ed6-b157-3c8fb7df16de",
+            "wxmp.03e2fd17-c98e-4fbc-bfa9-1f028f96d642",
+            "wxmp.a009620c-7b90-4674-8418-19ef76334816",
+            "wxmp.df473d8f-dbb0-43dc-8688-4b0eefc201eb",
+        ]),
 ) -> None:
     url = "https://www.xiaohongshu.com/fe_api/burdock/weixin/v2/shield/captchaV2"
     logger.info(f"\t\n\tauthorizations: {authorization}\t\n \t")
@@ -39,4 +52,5 @@ def applet_bypass(
 
 
 if __name__ == "__main__":
+    # print(dirname(__file__))
     Fire(applet_bypass)

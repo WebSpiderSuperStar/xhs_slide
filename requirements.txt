@@ -6,3 +6,4 @@ fire
 flask
 pyexecjs
 supervisor
+fastapi[all]
